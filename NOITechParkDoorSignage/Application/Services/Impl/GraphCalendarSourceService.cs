@@ -60,7 +60,7 @@ namespace NOITechParkDoorSignage.Application.Services.Impl
                         continue;
                     }
 
-                    _logger.LogWarning($"Found {eventCollections.Value.Count} events for room {room.Email}:\n{String.Join("\n", eventCollections.Value.Select((e, i) => $"{i + 1}) {e.Subject} {e.Start.ToDateTime().ToString("HH:mm")}-{e.End.ToDateTime().ToString("HH:mm")}"))}");
+                    _logger.LogWarning($"Found {eventCollections.Value.Count} events for room {room.Email}:\n{String.Join("\n", eventCollections.Value.Select((e, i) => $"{i + 1}) {e.Subject} {e.Start.ToDateTime().ToString("HH:mm")} UTC - {e.End.ToDateTime().ToString("HH:mm")} UTC"))}");
 
                     if (eventCollections.Value.Count == 0)
                     {
@@ -77,8 +77,8 @@ namespace NOITechParkDoorSignage.Application.Services.Impl
                             Title = office365Event.Subject,
                             Description = office365Event.BodyPreview,
                             IsPrivate = office365Event.Sensitivity == Sensitivity.Private,
-                            StartDate = office365Event.Start.ToDateTime().ToLocalTime(), // Dates are saved in UTC on MS Graph (NB_ tymesettings on the server has to be correct!)
-                             EndDate = office365Event.End.ToDateTime().ToLocalTime(), // Dates are saved in UTC on MS Graph
+                            StartDate = office365Event.Start.ToDateTime(), // Dates are saved in UTC on MS Graph (NB_ tymesettings on the server has to be correct!)
+                            EndDate = office365Event.End.ToDateTime(), // Dates are saved in UTC on MS Graph
                             Location = office365Event.Location.DisplayName,
                             Organizer = office365Event.Organizer.EmailAddress.Address,
                             Attendees = office365Event.Attendees.Select(a => a.EmailAddress.Address).ToList(),

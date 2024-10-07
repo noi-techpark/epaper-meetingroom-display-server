@@ -11,7 +11,11 @@ namespace NOITechParkDoorSignage.Application.ExtensionMethods
     public static class CalendarExtensionMethod
     {
         private static TimeZoneInfo italianTimezone => TimeZoneInfo.FindSystemTimeZoneById("Europe/Rome");
-        private static DateTime getItalianTimezoneDate(DateTime utcDate) => TimeZoneInfo.ConvertTimeFromUtc(utcDate, italianTimezone);
+        private static DateTime getItalianTimezoneDate(DateTime utcDate)
+        {
+            DateTime kindDate = new DateTime(utcDate.Year, utcDate.Month, utcDate.Day, utcDate.Hour, utcDate.Minute, utcDate.Second, DateTimeKind.Utc);
+            return TimeZoneInfo.ConvertTimeFromUtc(kindDate, italianTimezone);
+        }
 
         public static int TotalMinutesFromNow(this DateTime dateTime)
         {
@@ -29,7 +33,6 @@ namespace NOITechParkDoorSignage.Application.ExtensionMethods
             //  At the NOI tech park, the title is compose as follow
             //  [Room],[Organizer],<Title>
             var titleTokens = calendarEvent.Title.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-
             var cem = new CalendarEventViewModel
             {
                 Title = titleTokens.Length > 3 ? titleTokens[2] : calendarEvent.Title,
